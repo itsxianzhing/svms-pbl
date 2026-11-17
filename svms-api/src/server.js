@@ -29,7 +29,7 @@ app.post('/api/siswa', async (req, res) => {
     }
 });
 
-app.get('/api/siswa', async (req, res) => {
+app.get('/api/siswa', async (res) => {
     const query = 'SELECT * FROM users';
 
     try {
@@ -51,11 +51,17 @@ app.get('/api/siswa/:id', async (req, res) => {
     const query = 'SELECT * FROM users WHERE id = ?';
 
     try {
-        const [users] = await db.execute(query, [id]);
+        const [user] = await db.execute(query, [id]);
+
+        if (user.length === 0) {
+            return res.status(404).json({
+                message: 'User tidak ditemukan'
+            });
+        }
 
         res.status(200).json({
             status: 'Success',
-            data: users
+            data: user
         });
     } catch (error) {
         res.status(500).json({
