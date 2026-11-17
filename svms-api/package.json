@@ -4,8 +4,8 @@
   "private": true,
   "description": "SVMS REST API",
   "license": "ISC",
-  "author": "",
-  "type": "commonjs",
+  "author": "tatan",
+  "type": "module",
   "main": "src/server.js",
   "scripts": {
     "dev": "nodemon src/server.js",
