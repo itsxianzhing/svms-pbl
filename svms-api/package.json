@@ -1,0 +1,23 @@
+{
+  "name": "svms-api",
+  "version": "1.0.0",
+  "description": "",
+  "homepage": "https://github.com/itsxianzhing/svms-pbl#readme",
+  "bugs": {
+    "url": "https://github.com/itsxianzhing/svms-pbl/issues"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/itsxianzhing/svms-pbl.git"
+  },
+  "license": "ISC",
+  "author": "tatan",
+  "type": "commonjs",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "dependencies": {
+    "express": "^5.3.0"
+  }
+}
