@@ -6,6 +6,13 @@ const findByEmail = async (email) => {
     });
 };
 
+const createUser = async (userData) => {
+    return await prisma.user.create({
+        data: userData
+    });
+};
+
 export default {
-    findByEmail
+    findByEmail,
+    createUser
 };

@@ -4,7 +4,7 @@ import authController from '../controllers/authController.js';
 import authMiddleware from '../middlewares/authMiddleware.js';
 import validate from '../middlewares/validateMiddleware.js';
 
-import { loginDto } from '../dtos/authDto.js';
+import { loginDto, registerDto } from '../dtos/authDto.js';
 
 const router = express.Router();
 
@@ -13,6 +13,13 @@ router.post(
     '/login',
     validate(loginDto),
     authController.login
+);
+
+// POST /api/auth/register
+router.post(
+    '/register',
+    validate(registerDto),
+    authController.register
 );
 
 // GET /api/auth/me

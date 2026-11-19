@@ -3,8 +3,8 @@ import jwt from 'jsonwebtoken';
 
 import authRepository from '../repositories/authRepository.js';
 
-const login = async (data) => {
-    const user = await authRepository.findByEmail(data.email);
+const login = async ({ email, password }) => {
+    const user = await authRepository.findByEmail(email);
 
     if (!user) {
         const error = new Error('Invalid email or password');
@@ -13,7 +13,7 @@ const login = async (data) => {
     }
 
     const isPasswordValid = await bcrypt.compare(
-        data.password,
+        password,
         user.password
     );
 
@@ -43,6 +43,41 @@ const login = async (data) => {
     };
 };
 
+const register = async ({ name, email, password }) => {
+    const existingUser = await authRepository.findByEmail(email);
+
+    if (existingUser) {
+        throw new Error('Email sudah terdaftar', 409);
+    };
+
+    const hashedPassword = await bcrypt.hash(password, 10);
+
+    const newUser = await authRepository.createUser({
+        name,
+        email,
+        password: hashedPassword
+    });
+
+    const token = jwt.sign(
+        {},
+        process.env.JWT_SECRET,
+        {
+            subject: String(newUser.id),
+            expiresIn: process.env.JWT_EXPIRES_IN || '1d'
+        }
+    );
+
+    return {
+        token,
+        user: {
+            id: newUser.id,
+            name: newUser.name,
+            email: newUser.email
+        }
+    };
+};
+
 export default {
-    login
+    login,
+    register
 };
