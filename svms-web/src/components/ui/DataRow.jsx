@@ -1,0 +1,2 @@
+export function Field({ label, value, className = '' }) { return <div className={className}><dt className="text-xs font-medium text-slate-500">{label}</dt><dd className="mt-1 break-words text-sm font-medium text-slate-900">{value}</dd></div>; }
+export function DataRow({ label, children }) { return <div className="flex min-w-0 items-start justify-between gap-4"><span className="text-xs font-medium text-slate-500">{label}</span><span className="min-w-0 break-words text-right text-sm font-medium text-slate-900">{children}</span></div>; }
