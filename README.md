@@ -5,8 +5,6 @@
 
 Pendekatan: **Design Thinking** (Empathize → Define → Ideate → Prototype → Test).
 
-> 🔧 Bagian bertanda 🔧 adalah isian yang perlu kamu sesuaikan dengan kondisi proyekmu yang sebenarnya (nama folder, domain, URL repo, nama variabel). Hapus tanda 🔧 setelah dicek.
-
 ---
 
 ## Daftar Isi
@@ -332,8 +330,6 @@ Kontrak lengkap (bentuk data, aturan bisnis, contoh respons) ada di [`svms-web/d
 - Status: `401` belum login, `403` tidak berhak, `404` tidak ada, `409` konflik aturan bisnis, `422` validasi gagal.
 
 ### Endpoint
-
-🔧 Centang kolom **Status** sesuai progres backend kamu.
 
 | Method | Path | Akses | Fungsi | Status |
 |---|---|---|---|---|
