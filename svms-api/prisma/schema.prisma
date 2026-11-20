@@ -29,8 +29,10 @@ model User {
   id        Int      @id @default(autoincrement())
   name      String   @db.VarChar(100)
   email     String   @unique @db.VarChar(150)
-  password  String   @db.VarChar(255) // simpan hash (bcrypt), bukan teks biasa
+  password  String   @db.VarChar(255)
+  phone     String?  @db.VarChar(20)
   role      Role     @default(CUSTOMER)
+
   createdAt DateTime @default(now()) @map("created_at")
 
   bookings Booking[]
