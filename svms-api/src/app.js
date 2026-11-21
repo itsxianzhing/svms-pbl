@@ -2,6 +2,7 @@ import express from 'express';
 
 import authRoutes from './routes/authRoutes.js';
 import userRoutes from './routes/userRoutes.js';
+import venueRoutes from './routes/venueRoutes.js';
 import courtRoutes from './routes/courtRoutes.js';
 
 import errorMiddleware from './middlewares/errorMiddleware.js';

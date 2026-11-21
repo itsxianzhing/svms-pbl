@@ -8,20 +8,20 @@ memerlukan header `Authorization: Bearer <token>`. Respons berhasil dibungkus se
 
 | Method | Path             | Body                        | Response          |
 | ------ | ---------------- | --------------------------- | ----------------- |
-<!-- | POST   | `/auth/login`    | `{ email, password }`       | `{ token, user }` |  -->
-<!-- | POST   | `/auth/register` | `{ name, email, password }` | `{ token, user }` | -->
-<!-- | GET    | `/auth/me`       | -                           | `user`            | -->
+| POST   | `/auth/login`    | `{ email, password }`       | `{ token, user }` | 
+| POST   | `/auth/register` | `{ name, email, password }` | `{ token, user }` |
+| GET    | `/auth/me`       | -                           | `user`            |
 
 ## Venue
 
 | Method | Path               | Query/body                                    | Response                                                 |
 | ------ | ------------------ | --------------------------------------------- | -------------------------------------------------------- |
-<!-- | GET    | `/venues`          | Query opsional: `search`, `type`, `city`      | `Venue[]`                                                | -->
-<!-- | GET    | `/venues/filters`  | -                                             | `{ types: string[], cities: string[] }`                  | -->
-<!-- | GET    | `/venues/:venueId` | -                                             | `Venue` dengan `courts: Court[]`                         | -->
-<!-- | POST   | `/venues`          | `{ name, type, address, city, description? }` | `Venue` (ADMIN)                                          | -->
-<!-- | PUT    | `/venues/:venueId` | `{ name, type, address, city, description? }` | `Venue` (ADMIN)                                          | -->
-<!-- | DELETE | `/venues/:venueId` | -                                             | `{}` (ADMIN); `409` bila venue/courtnya memiliki booking | -->
+| GET    | `/venues`          | Query opsional: `search`, `type`, `city`      | `Venue[]`                                                |
+| GET    | `/venues/filters`  | -                                             | `{ types: string[], cities: string[] }`                  |
+| GET    | `/venues/:venueId` | -                                             | `Venue` dengan `courts: Court[]`                         |
+| POST   | `/venues`          | `{ name, type, address, city, description? }` | `Venue` (ADMIN)                                          |
+| PUT    | `/venues/:venueId` | `{ name, type, address, city, description? }` | `Venue` (ADMIN)                                          |
+| DELETE | `/venues/:venueId` | -                                             | `{}` (ADMIN); `409` bila venue/courtnya memiliki booking |
 
 `Venue` berisi `id`, `name`, `type`, `address`, `city`, `description`, `courtCount`, dan
 `minPricePerHour` (atau `null` bila tidak ada court aktif).

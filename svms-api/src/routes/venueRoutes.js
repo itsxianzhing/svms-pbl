@@ -69,7 +69,9 @@ router.delete(
 // POST /api/venues/:venueId/courts
 router.post(
     '/:venueId/courts',
+    authMiddleware,
     adminMiddleware,
+    validate(venueIdDto, 'params'),
     validate(createCourtDto),
     courtController.createCourt
 );

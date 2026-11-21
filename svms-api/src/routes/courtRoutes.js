@@ -8,19 +8,20 @@ import validate from '../middlewares/validateMiddleware.js';
 
 import {
     courtIdDto,
-    updateCourtDto
+    updateCourtDto,
+    courtBookingsDto
 } from '../dtos/courtDto.js';
 
 const router = express.Router();
 
-// All endpoints below require ADMIN access
 router.use(authMiddleware);
 
 // GET /api/courts/:courtId/bookings
 router.get(
     '/:courtId/bookings',
     validate(courtIdDto, 'params'),
-    courtController.getCourtById
+    validate(courtBookingsDto, 'query'),
+    courtController.getCourtBookings
 );
 
 // PUT /api/courts/:courtId

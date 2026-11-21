@@ -1,3 +1,4 @@
+import bcrypt from 'bcrypt';
 import venueRepository from '../repositories/venueRepository.js';
 
 const getAllVenues = async () => {
