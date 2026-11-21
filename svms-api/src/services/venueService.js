@@ -1,22 +1,23 @@
-import bcrypt from 'bcrypt';
 import venueRepository from '../repositories/venueRepository.js';
 
-const getAllVenues = async () => {
-    return await venueRepository.findAll();
+const getAllVenues = async (filters) => {
+    return await venueRepository.findAll(filters);
 };
 
 const getVenueFilters = async () => {
     const [types, cities] = await Promise.all([
         venueRepository.getDistinctTypes(),
+        venueRepository.getDistinctCities()
     ]);
 
     return {
-        types: types.map((item) => item.type)
+        types: types.map(item => item.type),
+        cities: cities.map(item => item.city)
     };
 };
 
-const getVenueById = async (id) => {
-    const venue = await venueRepository.findById(id);
+const getVenueById = async (venueId) => {
+    const venue = await venueRepository.findById(venueId);
 
     if (!venue) {
         const error = new Error('Venue not found');
@@ -28,36 +29,19 @@ const getVenueById = async (id) => {
 };
 
 const createVenue = async (data) => {
-    const venueData = {
-        ...data
-    };
-
-    return await venueRepository.create(venueData);
+    return await venueRepository.create(data);
 };
 
-const updateVenue = async (id, data) => {
-    await getVenueById(id);
+const updateVenue = async (venueId, data) => {
+    await getVenueById(venueId);
 
-    const venueData = { ...data };
-
-    if (venueData.password) {
-        venueData.password = await bcrypt.hash(
-            venueData.password,
-            10
-        );
-    }
-
-    return await venueRepository.update(id, venueData);
+    return await venueRepository.update(venueId, data);
 };
 
-const deleteVenue = async (id) => {
-    const venue = await venueRepository.findById(id);
+const deleteVenue = async (venueId) => {
+    await getVenueById(venueId);
 
-    if (!venue) {
-        throw new Error('Venue not found');
-    }
-
-    const hasBookings = await venueRepository.hasBookings(id);
+    const hasBookings = await venueRepository.hasBookings(venueId);
 
     if (hasBookings) {
         const error = new Error(
@@ -67,7 +51,7 @@ const deleteVenue = async (id) => {
         throw error;
     }
 
-    return await venueRepository.remove(id);
+    return await venueRepository.remove(venueId);
 };
 
 export default {

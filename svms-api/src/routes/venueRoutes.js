@@ -10,7 +10,8 @@ import validate from '../middlewares/validateMiddleware.js';
 import {
     venueIdDto,
     createVenueDto,
-    updateVenueDto
+    updateVenueDto,
+    venueFilterDto
 } from '../dtos/venueDto.js';
 
 import {
@@ -25,6 +26,7 @@ router.use(authMiddleware);
 // GET /api/venues
 router.get(
     '/',
+    validate(venueFilterDto, 'query'),
     venueController.getAllVenues
 );
 
@@ -34,9 +36,9 @@ router.get(
     venueController.getVenueFilters
 );
 
-// GET /api/venues/:id
+// GET /api/venues/:venueId
 router.get(
-    '/:id',
+    '/:venueId',
     validate(venueIdDto, 'params'),
     venueController.getVenueById
 );
@@ -49,18 +51,18 @@ router.post(
     venueController.createVenue
 );
 
-// PUT /api/venues/:id
+// PUT /api/venues/:venueId
 router.put(
-    '/:id',
+    '/:venueId',
     adminMiddleware,
     validate(venueIdDto, 'params'),
     validate(updateVenueDto),
     venueController.updateVenue
 );
 
-// DELETE /api/venues/:id
+// DELETE /api/venues/:venueId
 router.delete(
-    '/:id',
+    '/:venueId',
     adminMiddleware,
     validate(venueIdDto, 'params'),
     venueController.deleteVenue
@@ -69,7 +71,6 @@ router.delete(
 // POST /api/venues/:venueId/courts
 router.post(
     '/:venueId/courts',
-    authMiddleware,
     adminMiddleware,
     validate(venueIdDto, 'params'),
     validate(createCourtDto),

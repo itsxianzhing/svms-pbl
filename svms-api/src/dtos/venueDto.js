@@ -22,5 +22,11 @@ export const updateVenueDto = z.object({
 );
 
 export const venueIdDto = z.object({
-    id: z.coerce.number().int().positive()
+    venueId: z.coerce.number().int().positive()
+});
+
+export const venueFilterDto = z.object({
+    search: z.string().optional(),
+    type: z.string().optional(),
+    city: z.string().optional()
 });

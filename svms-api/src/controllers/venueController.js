@@ -2,10 +2,12 @@ import venueService from '../services/venueService.js';
 
 const getAllVenues = async (req, res, next) => {
     try {
-        const venues = await venueService.getAllVenues();
+        const filters = req.validated.query;
+
+        const venues = await venueService.getAllVenues(filters);
 
         res.status(200).json({
-            message: 'Venue retrieved successfully',
+            message: 'Venues retrieved successfully',
             data: venues
         });
     } catch (error) {
@@ -28,9 +30,9 @@ const getVenueFilters = async (req, res, next) => {
 
 const getVenueById = async (req, res, next) => {
     try {
-        const { id } = req.validated.params;
+        const { venueId } = req.validated.params;
 
-        const venue = await venueService.getVenueById(id);
+        const venue = await venueService.getVenueById(venueId);
 
         res.status(200).json({
             message: 'Venue retrieved successfully',
@@ -58,10 +60,10 @@ const createVenue = async (req, res, next) => {
 
 const updateVenue = async (req, res, next) => {
     try {
-        const { id } = req.validated.params;
+        const { venueId } = req.validated.params;
         const data = req.validated.body;
 
-        const venue = await venueService.updateVenue(id, data);
+        const venue = await venueService.updateVenue(venueId, data);
 
         res.status(200).json({
             message: 'Venue updated successfully',
@@ -74,9 +76,9 @@ const updateVenue = async (req, res, next) => {
 
 const deleteVenue = async (req, res, next) => {
     try {
-        const { id } = req.validated.params;
+        const { venueId } = req.validated.params;
 
-        const venue = await venueService.deleteVenue(id);
+        const venue = await venueService.deleteVenue(venueId);
 
         res.status(200).json({
             message: 'Venue deleted successfully',
