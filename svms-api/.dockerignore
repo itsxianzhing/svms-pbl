@@ -1,0 +1,27 @@
+# =============================================================================
+# .dockerignore — svms-api
+# =============================================================================
+# Files listed here are NEVER sent to the Docker build daemon.
+# This keeps the build context small and prevents secrets / dev artifacts
+# from leaking into the image.
+# =============================================================================
+
+node_modules/
+src/generated/
+coverage/
+tests/
+docs/
+*.db
+dist/
+.git/
+.gitignore
+.vscode/
+.idea/
+*.log
+.env
+.env.*
+!.env.example
+Dockerfile
+docker-compose.yml
+.dockerignore
+README.md

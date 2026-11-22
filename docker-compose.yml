@@ -1,0 +1,69 @@
+# =============================================================================
+# docker-compose.yml — SVMS deployment
+# =============================================================================
+# The API and web images can be pulled from GHCR or built locally.
+# No ports are published to the host: Nginx Proxy Manager reaches svms-web
+# through proxy-network, while svms-api remains private on svms-internal.
+# Networks: svms-internal (web + API), proxy-network (NPM + web), and the
+# external MySQL network (API + existing MySQL container).
+# =============================================================================
+
+services:
+  svms-api:
+    image: ghcr.io/itsxianzhing/svms-api:latest
+    build: ./svms-api
+    container_name: svms-api
+    restart: unless-stopped
+    init: true
+    env_file:
+      - ./svms-api/.env.production
+    healthcheck:
+      test: ["CMD", "wget", "-q", "--spider", "http://127.0.0.1:3000/api/health"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+      start_period: 40s
+    logging:
+      driver: json-file
+      options:
+        max-size: "10m"
+        max-file: "3"
+    networks:
+      - svms-internal
+      - mysql-network
+
+  svms-web:
+    image: ghcr.io/itsxianzhing/svms-web:latest
+    build:
+      context: ./svms-web
+      args:
+        VITE_API_URL: /api
+        VITE_USE_MOCK: "false"
+        VITE_SHOW_DEMO_ACCOUNTS: "false"
+    container_name: svms-web
+    restart: unless-stopped
+    depends_on:
+      svms-api:
+        condition: service_healthy
+    healthcheck:
+      test: ["CMD", "wget", "-q", "--spider", "http://127.0.0.1:80/"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+      start_period: 15s
+    logging:
+      driver: json-file
+      options:
+        max-size: "10m"
+        max-file: "3"
+    networks:
+      - svms-internal
+      - proxy-network
+
+networks:
+  svms-internal: # private network between web and API
+  proxy-network:
+    external: true # shared with Nginx Proxy Manager
+  mysql-network:
+    external: true
+    name: ${MYSQL_NETWORK:-mysql-network} # network hosting the existing MySQL container

@@ -66,11 +66,14 @@ npm run build
 
 ## Docker
 
-Image dibangun dengan multi-stage Dockerfile dan disajikan oleh Nginx. Dari folder ini:
+Image dibangun dengan multi-stage Dockerfile dan disajikan oleh Nginx. Nginx
+mem-forward `/api/*` secara tetap ke `svms-api:3000`; URL backend tidak dikonfigurasi
+saat runtime.
+Dari folder ini:
 
 ```bash
 docker build -t svms-web .
-docker run --rm -p 8080:80 -e BACKEND_URL=http://host.docker.internal:3000 svms-web
+docker run --rm -p 8080:80 svms-web
 ```
 
 Alternatif Compose:
@@ -79,7 +82,10 @@ Alternatif Compose:
 docker compose up --build
 ```
 
-Untuk mode mock di image, berikan build argument `VITE_USE_MOCK=true`. Docker CLI harus tersedia di mesin yang menjalankan perintah tersebut.
+Untuk mode mock di image, berikan build argument `VITE_USE_MOCK=true`. Pada
+Compose, `svms-web` berada di `proxy-network` dan `svms-internal`; backend
+selalu dijangkau sebagai `svms-api:3000`. Docker CLI harus tersedia di mesin
+yang menjalankan perintah tersebut.
 
 ## Struktur penting
 

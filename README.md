@@ -421,7 +421,6 @@ Seluruh endpoint disimulasikan di memori, berguna untuk demo atau membandingkan 
 | `VITE_USE_MOCK` | `false` | `true` = pakai data mock |
 | `VITE_SHOW_DEMO_ACCOUNTS` | `true` | Tampilkan tombol akun demo di halaman login (matikan di production) |
 | `VITE_DEV_PROXY_TARGET` | `http://localhost:3000` | Target proxy saat dev |
-| `BACKEND_URL` | `http://svms-api:3000` | Hanya untuk container nginx: tujuan proxy `/api` |
 
 `.env` tidak pernah di-commit. Hanya `.env.example` yang masuk repository.
 
@@ -429,16 +428,20 @@ Seluruh endpoint disimulasikan di memori, berguna untuk demo atau membandingkan 
 
 ## 11. Docker
 
-> 🔜 Bagian ini adalah rencana dan contoh. Sesuaikan nama image, network, dan port dengan setup VPS-mu.
+> Konfigurasi Docker sudah dibuat, tetapi belum di-deploy ke VPS. Detail operasional ada di [`docs/DOCKER.md`](docs/DOCKER.md).
 
 ### 11.1 Gambaran
 
 Frontend dan backend masing-masing satu container. Database memakai **container MySQL yang sudah berjalan**, tidak membuat container MySQL baru.
 
-```
-Network "proxy"  : Nginx Proxy Manager ⇄ svms-web
-Network "svms"   : svms-web ⇄ svms-api            (internal aplikasi)
-Network "db"     : svms-api ⇄ mysql                (shared, external)
+```text
+Cloudflare Tunnel → Nginx Proxy Manager (proxy-network) → svms-web :80
+                                                        │ /api/*
+                                                        ▼
+                                               svms-api :3000
+                                      (svms-internal + mysql-network)
+                                                        │
+                                             MySQL container existing
 ```
 
 ### 11.2 Database: container MySQL bersama
@@ -469,63 +472,49 @@ lalu isi `SHADOW_DATABASE_URL` di `.env` lokal. Di production cukup `prisma migr
 mysql://svms_user:PASSWORD@nama-container-mysql:3306/svms
 ```
 
-Container `svms-api` harus bergabung ke network yang sama dengan container MySQL (network `db` di atas, dibuat sebagai `external`).
+Container `svms-api` harus bergabung ke network yang sama dengan container MySQL
+(`mysql-network` pada Compose, dibuat sebagai `external`).
 
-### 11.3 Backend (`svms-api/Dockerfile`), contoh
+### 11.3 Backend dan frontend
 
-```dockerfile
-FROM node:22-alpine
-WORKDIR /app
+Dockerfile API memakai multi-stage Node 22, migration Prisma saat start, dan
+runtime non-root. Dockerfile web membangun Vite lalu hanya menyimpan asset
+static di Nginx. Reverse proxy `/api/*` memakai hostname tetap `svms-api:3000`.
 
-COPY package*.json ./
-RUN npm ci --omit=dev
-
-COPY prisma ./prisma
-RUN npx prisma generate
-
-COPY src ./src
-
-ENV NODE_ENV=production
-EXPOSE 3000
-
-# Terapkan migration lalu jalankan server
-CMD ["sh", "-c", "npx prisma migrate deploy && node src/server.js"]
-```
-
-> Jika `prisma` terdaftar di `devDependencies`, pindahkan ke `dependencies` atau jalankan `npm ci` penuh, supaya `migrate deploy` tersedia di container.
-
-### 11.4 Frontend
-
-Dockerfile dan konfigurasi nginx sudah ada di `svms-web/` (multi-stage: build Vite lalu disajikan nginx). Nginx menyajikan SPA dan meneruskan `/api/*` ke `BACKEND_URL`. Detail di [`svms-web/README.md`](./svms-web/README.md).
-
-### 11.5 `docker-compose.yml` gabungan (root), contoh
+### 11.4 Compose gabungan (root)
 
 ```yaml
 services:
   svms-api:
+    image: ghcr.io/itsxianzhing/svms-api:latest
     build: ./svms-api
     container_name: svms-api
     restart: unless-stopped
-    env_file: ./svms-api/.env.production
-    networks: [svms, db]
+    env_file:
+      - ./svms-api/.env.production
+    networks:
+      - svms-internal
+      - mysql-network
 
   svms-web:
+    image: ghcr.io/itsxianzhing/svms-web:latest
     build: ./svms-web
     container_name: svms-web
     restart: unless-stopped
-    environment:
-      BACKEND_URL: http://svms-api:3000
-    depends_on: [svms-api]
-    networks: [svms, proxy]
+    depends_on:
+      svms-api:
+        condition: service_healthy
+    networks:
+      - svms-internal
+      - proxy-network
 
 networks:
-  svms:
-  db:
+  svms-internal:
+  mysql-network:
     external: true
-    name: nama-network-mysql      # 🔧 network tempat container MySQL berada
-  proxy:
+    name: ${MYSQL_NETWORK:-mysql-network}
+  proxy-network:
     external: true
-    name: nama-network-npm        # 🔧 network Nginx Proxy Manager
 ```
 
 Tidak ada `ports:` di service mana pun. Akses publik hanya lewat Nginx Proxy Manager.
@@ -534,7 +523,7 @@ Tidak ada `ports:` di service mana pun. Akses publik hanya lewat Nginx Proxy Man
 
 ## 12. Deployment ke VPS
 
-> 🔜 Rencana. Urutan di bawah adalah panduan, bukan catatan hasil yang sudah dijalankan.
+Status: konfigurasi sudah dibuat, belum di-deploy. Ikuti panduan lengkap di [`docs/DOCKER.md`](docs/DOCKER.md).
 
 ### 12.1 Persiapan server
 
@@ -551,9 +540,9 @@ Buat database `svms` dan user `svms_user` seperti di [bagian 11.2](#112-database
 ```bash
 git clone <url-repo> svms && cd svms        # 🔧
 cp svms-api/.env.example svms-api/.env.production
-# isi DATABASE_URL (host = nama container MySQL), JWT_SECRET kuat, NODE_ENV=production
+# isi DATABASE_URL/DB_* (host = nama container MySQL) dan JWT_SECRET kuat
 
-docker compose up -d --build
+docker compose pull && docker compose up -d
 docker compose logs -f svms-api             # pastikan migration berhasil
 ```
 
@@ -681,7 +670,7 @@ Ini prototype untuk pembelajaran. Hal yang perlu diketahui:
 |---|---|
 | `prisma migrate dev` gagal soal shadow database | User MySQL tidak punya izin `CREATE`. Buat `svms_shadow` dan isi `SHADOW_DATABASE_URL`, atau beri izin yang sesuai pada user development. |
 | `Can't reach database server` di container | Container api belum satu network dengan container MySQL, atau host di `DATABASE_URL` bukan nama container. |
-| Frontend 502 / Bad Gateway di `/api` | `BACKEND_URL` salah atau `svms-api` belum berjalan. Cek `docker compose logs svms-web svms-api`. |
+| Frontend 502 / Bad Gateway di `/api` | `svms-api` belum berjalan, hostname/network salah, atau API gagal migration. Cek `docker compose logs svms-web svms-api`. |
 | Login selalu kembali ke halaman login | Token tidak terkirim atau kedaluwarsa. Cek respons `/api/auth/me` dan `JWT_SECRET` yang konsisten antar restart. |
 | CORS error di dev | Pastikan frontend memakai proxy Vite (`VITE_API_URL=/api`), bukan memanggil `localhost:3000` langsung. |
 | Harga atau total tampil sebagai string | `Decimal` Prisma belum dikonversi ke `number` di backend. |
