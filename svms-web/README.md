@@ -46,7 +46,7 @@ Buka URL yang ditampilkan Vite (biasanya `http://localhost:5173`).
 | Role     | Email                | Password      |
 | -------- | -------------------- | ------------- |
 | Admin    | `admin@svms.test`    | `admin123`    |
-| Customer | `customer@svms.test` | `customer123` |
+| Customer | `budi.customer@svms.test` | `customer123` |
 
 ## Environment
 

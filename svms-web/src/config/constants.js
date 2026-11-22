@@ -33,5 +33,5 @@ export const PAYMENT_METHODS = [
 export const TOKEN_KEY = 'svms_token';
 export const DEMO_ACCOUNTS = {
   ADMIN: { email: 'admin@svms.test', password: 'admin123' },
-  CUSTOMER: { email: 'customer@svms.test', password: 'customer123' },
+  CUSTOMER: { email: 'budi.customer@svms.test', password: 'customer123' },
 };

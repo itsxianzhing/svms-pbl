@@ -12,7 +12,7 @@ export const seed = {
     {
       id: 'u2',
       name: 'Dina Pemain',
-      email: 'customer@svms.test',
+        email: 'budi.customer@svms.test',
       password: 'customer123',
       role: 'CUSTOMER',
     },

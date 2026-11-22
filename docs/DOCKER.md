@@ -74,10 +74,14 @@ Seed tidak dijalankan otomatis. Jalankan manual setelah container sehat:
 docker compose exec svms-api npx prisma db seed
 ```
 
-Repository ini belum mendefinisikan konfigurasi seed di `package.json`, sehingga
-perintah tersebut baru berhasil setelah script/seed Prisma ditambahkan. Seed yang
-membutuhkan devDependency juga harus memindahkan dependency tersebut ke
-`dependencies` atau dijalankan dari environment development.
+Script seed dikonfigurasi di `svms-api/package.json` dan menggunakan kredensial
+demo tetap yang sesuai dengan tombol frontend. Script membuat satu admin,
+tiga customer, tiga venue, tujuh court, serta tiga contoh booking. Password
+demo di-hash dengan bcrypt. Seed memakai
+`upsert` atau pencarian identitas stabil, sehingga tidak mengubah record yang
+sudah ada secara umum dan aman dijalankan ulang. Karena akun demo memang harus
+tetap dapat digunakan, hash password hanya diperbarui pada email demo yang
+ditentukan oleh script.
 
 ## Build variables dan runtime variables
 

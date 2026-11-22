@@ -312,7 +312,7 @@ npx prisma db seed
 | Akun | Email | Password |
 |---|---|---|
 | Admin | `admin@svms.test` | `admin123` |
-| Customer | `customer@svms.test` | `customer123` |
+| Customer | `budi.customer@svms.test` | `customer123` |
 
 Seed juga membuat beberapa venue, court, dan booking contoh agar dashboard tidak kosong. **Ganti atau hapus akun ini di production.**
 

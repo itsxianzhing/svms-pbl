@@ -59,7 +59,7 @@ export function LoginPage() {
                 type="button"
                 onClick={() => setForm(v)}
               >
-                {k === 'ADMIN' ? 'Admin' : 'Customer'}
+                 {k === 'ADMIN' ? 'Demo Admin' : 'Demo Customer'}
               </Button>
             ))}
           </div>
