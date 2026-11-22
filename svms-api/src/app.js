@@ -4,6 +4,8 @@ import authRoutes from './routes/authRoutes.js';
 import userRoutes from './routes/userRoutes.js';
 import venueRoutes from './routes/venueRoutes.js';
 import courtRoutes from './routes/courtRoutes.js';
+import bookingRoutes from './routes/bookingRoutes.js';
+import dashboardRoutes from './routes/dashboardRoutes.js';
 
 import errorMiddleware from './middlewares/errorMiddleware.js';
 
@@ -29,6 +31,12 @@ app.use('/api/venues', venueRoutes);
 
 // Court routes
 app.use('/api/courts', courtRoutes);
+
+// Booking routes
+app.use('/api/bookings', bookingRoutes);
+
+// Dashboard summary routes
+app.use('/api/dashboard', dashboardRoutes);
 
 app.use((req, res) => {
     res.status(404).json({

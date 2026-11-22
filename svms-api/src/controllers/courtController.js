@@ -1,4 +1,3 @@
-
 import courtService from '../services/courtService.js';
 
 const getCourtById = async (req, res, next) => {

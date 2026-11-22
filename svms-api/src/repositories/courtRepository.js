@@ -92,6 +92,7 @@ export default {
     hasBookings,
     findByVenueId,
     findById,
+    findBookings,
     create,
     update,
     remove

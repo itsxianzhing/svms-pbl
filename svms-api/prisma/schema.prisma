@@ -25,6 +25,12 @@ enum BookingStatus {
   CANCELLED
 }
 
+enum PaymentMethod {
+  QRIS
+  VIRTUAL_ACCOUNT
+  E_WALLET
+}
+
 model User {
   id        Int      @id @default(autoincrement())
   name      String   @db.VarChar(100)
@@ -68,18 +74,21 @@ model Court {
 }
 
 model Booking {
-  id         Int           @id @default(autoincrement())
-  userId     Int           @map("user_id")
-  courtId    Int           @map("court_id")
-  startTime  DateTime      @map("start_time")
-  endTime    DateTime      @map("end_time")
-  totalPrice Decimal       @map("total_price") @db.Decimal(12, 2)
-  status     BookingStatus @default(PENDING)
-  createdAt  DateTime      @default(now()) @map("created_at")
+  id            Int            @id @default(autoincrement())
+  userId        Int            @map("user_id")
+  courtId       Int            @map("court_id")
+  startTime     DateTime       @map("start_time")
+  endTime       DateTime       @map("end_time")
+  totalPrice    Decimal        @map("total_price") @db.Decimal(12, 2)
+  status        BookingStatus  @default(PENDING)
+  paymentMethod PaymentMethod? @map("payment_method")
+  createdAt     DateTime       @default(now()) @map("created_at")
+  expiresAt     DateTime?      @map("expires_at")
 
   user  User  @relation(fields: [userId], references: [id])
   court Court @relation(fields: [courtId], references: [id])
 
   @@index([courtId, startTime])
+  @@index([userId, status])
   @@map("bookings")
 }
