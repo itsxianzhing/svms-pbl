@@ -4,6 +4,6 @@ export const PageHeader = ({ title, subtitle, action }) => (
         <h1 className="text-2xl font-semibold tracking-tight sm:text-3xl">{title}</h1>
         {subtitle && <p className="mt-1 text-sm text-slate-600">{subtitle}</p>}
     </div>
-    {action}
+    {action && <div className="flex w-full flex-wrap gap-2 sm:w-auto">{action}</div>}
   </div>
 );
