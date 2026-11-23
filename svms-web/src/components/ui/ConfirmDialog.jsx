@@ -11,11 +11,11 @@ export function ConfirmDialog({
   return (
     <Modal open={open} onClose={onClose} title={title}>
       <p className="text-sm text-slate-600">{message}</p>
-      <div className="mt-5 flex justify-end gap-2">
-        <Button variant="secondary" onClick={onClose}>
+      <div className="mt-5 grid grid-cols-2 gap-2">
+        <Button className="w-full" variant="secondary" onClick={onClose}>
           Kembali
         </Button>
-        <Button variant="danger" isLoading={isLoading} onClick={onConfirm}>
+        <Button className="w-full" variant="danger" isLoading={isLoading} onClick={onConfirm}>
           Ya, lanjutkan
         </Button>
       </div>

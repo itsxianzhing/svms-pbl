@@ -1,4 +1,5 @@
 import { useMemo, useState } from 'react';
+import { Eye, Pencil, Trash2 } from 'lucide-react';
 import { Link } from 'react-router-dom';
 import { venuesApi } from '@/features/venues/api';
 import { useFetch } from '@/hooks/useFetch';
@@ -129,7 +130,7 @@ export function AdminVenuesPage() {
         subtitle="Tambah, ubah, atau hapus venue."
         action={<Button onClick={() => setEditing(emptyVenue)}>Tambah venue</Button>}
       />
-      <div className="mb-5 grid gap-3 md:grid-cols-2">
+      <div className="mb-5 grid grid-cols-1 gap-4 md:grid-cols-2">
         <Input label="Cari venue" value={search} onChange={(e) => setSearch(e.target.value)} />
         <Select label="Jenis" value={type} onChange={(e) => setType(e.target.value)}>
           <option value="">Semua jenis</option>
@@ -146,7 +147,7 @@ export function AdminVenuesPage() {
         <p>Memuat venue...</p>
       ) : (
         <>
-        <ResponsiveTable columns={[{ key: 'venue', label: 'Venue', render: (venue) => <div><Link className="font-medium text-indigo-700 hover:underline" to={`/admin/venues/${venue.id}`}>{venue.name}</Link><p className="text-xs text-slate-500">{venue.address}</p></div> }, { key: 'type', label: 'Jenis' }, { key: 'city', label: 'Kota' }, { key: 'courtCount', label: 'Court' }]} rows={rows} renderActions={(venue) => <><Link to={`/admin/venues/${venue.id}`}><Button size="sm" variant="secondary" title="Lihat detail">Detail</Button></Link><Button size="sm" variant="secondary" onClick={() => setEditing(venue)} title="Ubah venue">Ubah</Button><Button size="sm" variant="danger" onClick={() => setDeleting(venue)} title="Hapus venue">Hapus</Button></>} />
+        <ResponsiveTable columns={[{ key: 'venue', label: 'Venue', render: (venue) => <div><Link className="font-medium text-indigo-700 hover:underline" to={`/admin/venues/${venue.id}`}>{venue.name}</Link><p className="text-xs text-slate-500">{venue.address}</p></div> }, { key: 'type', label: 'Jenis' }, { key: 'city', label: 'Kota' }, { key: 'courtCount', label: 'Court' }]} rows={rows} renderActions={(venue) => <><Link className="w-full sm:w-auto" to={`/admin/venues/${venue.id}`}><Button className="w-full sm:w-auto" size="sm" variant="secondary" title="Lihat detail" aria-label={`Lihat detail ${venue.name}`}><Eye className="sm:hidden" size={17} aria-hidden="true" /><span className="hidden sm:inline">Detail</span></Button></Link><Button className="w-full sm:w-auto" size="sm" variant="secondary" onClick={() => setEditing(venue)} title="Ubah venue" aria-label={`Ubah ${venue.name}`}><Pencil className="sm:hidden" size={17} aria-hidden="true" /><span className="hidden sm:inline">Ubah</span></Button><Button className="w-full sm:w-auto" size="sm" variant="danger" onClick={() => setDeleting(venue)} title="Hapus venue" aria-label={`Hapus ${venue.name}`}><Trash2 className="sm:hidden" size={17} aria-hidden="true" /><span className="hidden sm:inline">Hapus</span></Button></>} />
           {!rows.length && (
             <p className="rounded-b-2xl p-6 text-center text-sm text-slate-500">Tidak ada venue yang cocok.</p>
           )}

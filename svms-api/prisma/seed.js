@@ -143,7 +143,21 @@ const findOrCreateBooking = async ({ userId, courtId, startTime, data }) => {
     });
 };
 
+const clearDatabase = async () => {
+    console.log('Clearing existing database records...');
+
+    // Hapus berdasarkan urutan relasi foreign key
+    await prisma.booking.deleteMany();
+    await prisma.court.deleteMany();
+    await prisma.venue.deleteMany();
+    await prisma.user.deleteMany();
+
+    console.log('Database cleared successfully!');
+};
+
 const main = async () => {
+    // await clearDatabase();
+
     // Hash each configured password once; no plain-text password is persisted.
     const hashedPasswords = {
         ADMIN: await bcrypt.hash(adminPassword, 10),

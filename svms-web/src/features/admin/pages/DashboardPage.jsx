@@ -7,6 +7,8 @@ import { BarChart3, CalendarCheck, Clock3, WalletCards } from 'lucide-react';
 export function DashboardPage() {
   const { data } = useFetch(adminApi.summary, []);
   if (!data) return <p>Memuat dashboard...</p>;
+  const topCourts = data.topCourts || [];
+  const highestRevenue = Math.max(0, ...topCourts.map((court) => Number(court.totalRevenue ?? 0)));
   return (
     <>
       <PageHeader title="Dashboard" subtitle="Ringkasan performa bisnis Anda." />
@@ -22,10 +24,12 @@ export function DashboardPage() {
         ))}
       </div>
       <Card className="mt-5">
-        <h2 className="font-semibold">Lapangan paling laku</h2>
-        {data.topCourts.map((c) => (
-          <div className="mt-5" key={c.courtId}><div className="flex justify-between gap-3 text-sm"><span className="min-w-0 truncate font-medium">{c.courtName} <span className="font-normal text-slate-500">· {c.venueName}</span></span><span className="shrink-0 tabular-nums text-slate-500">{c.bookingCount} booking</span></div><div className="mt-2 h-2 rounded-full bg-slate-100"><div className="h-2 rounded-full bg-indigo-600" style={{ width: `${Math.min(100, c.bookingCount * 10)}%` }} /></div><p className="mt-1 text-xs text-slate-500">{rupiah(c.revenue)}</p></div>
-        ))}
+         <h2 className="font-semibold">Performa lapangan</h2>
+         {topCourts.map((c) => {
+           const revenue = Number(c.totalRevenue ?? 0);
+           const percentage = highestRevenue > 0 ? Math.min(100, Math.max(0, (revenue / highestRevenue) * 100)) : 0;
+           return <div className="mt-5" key={c.courtId}><div className="flex justify-between gap-3 text-sm"><span className="min-w-0 truncate font-medium">{c.courtName} <span className="font-normal text-slate-500">· {c.venueName}</span></span><span className="shrink-0 tabular-nums text-slate-500">{c.totalBookings} booking</span></div><div className="mt-2 h-2 rounded-full bg-slate-100"><div className="h-2 rounded-full bg-indigo-600 transition-[width] duration-500 motion-reduce:transition-none" style={{ width: `${percentage}%` }} /></div><p className="mt-1 text-xs text-slate-500">{rupiah(revenue)}</p></div>;
+         })}
       </Card>
     </>
   );

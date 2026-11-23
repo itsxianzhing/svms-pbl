@@ -1,4 +1,5 @@
 import { useState } from 'react';
+import { Pencil, Trash2 } from 'lucide-react';
 import { Link, useParams } from 'react-router-dom';
 import { venuesApi } from '@/features/venues/api';
 import { courtsApi } from '@/features/courts/api';
@@ -113,7 +114,7 @@ export function AdminVenueDetailPage() {
         title={venue.name}
         subtitle={`${venue.type} · ${venue.address}, ${venue.city}`}
         action={
-          <div className="flex gap-2">
+          <div className="flex w-full flex-wrap gap-2 sm:w-auto">
             <Link to="/admin/venues">
               <Button variant="secondary">Kembali</Button>
             </Link>
@@ -126,7 +127,7 @@ export function AdminVenueDetailPage() {
         <p className="mt-2 text-sm text-slate-600">{venue.description || 'Tidak ada deskripsi.'}</p>
         <p className="mt-3 text-sm text-slate-500">{venue.courtCount} court terdaftar</p>
       </Card>
-      <ResponsiveTable columns={[{ key: 'name', label: 'Court' }, { key: 'pricePerHour', label: 'Harga/jam', render: (court) => <span className="tabular-nums">{rupiah(court.pricePerHour)}</span> }, { key: 'isActive', label: 'Status', render: (court) => court.isActive ? 'Aktif' : 'Nonaktif' }]} rows={venue.courts} renderActions={(court) => <><Button size="sm" variant="secondary" onClick={() => setEditing(court)} title="Ubah court">Ubah</Button><Button size="sm" variant="danger" onClick={() => setDeleting(court)} title="Hapus court">Hapus</Button></>} />
+       <ResponsiveTable columns={[{ key: 'name', label: 'Court' }, { key: 'pricePerHour', label: 'Harga/jam', render: (court) => <span className="tabular-nums">{rupiah(court.pricePerHour)}</span> }, { key: 'isActive', label: 'Status', render: (court) => court.isActive ? 'Aktif' : 'Nonaktif' }]} rows={venue.courts} renderActions={(court) => <><Button className="w-full sm:w-auto" size="sm" variant="secondary" onClick={() => setEditing(court)} title="Ubah court" aria-label={`Ubah ${court.name}`}><Pencil className="sm:hidden" size={17} aria-hidden="true" /><span className="hidden sm:inline">Ubah</span></Button><Button className="w-full sm:w-auto" size="sm" variant="danger" onClick={() => setDeleting(court)} title="Hapus court" aria-label={`Hapus ${court.name}`}><Trash2 className="sm:hidden" size={17} aria-hidden="true" /><span className="hidden sm:inline">Hapus</span></Button></>} />
         {!venue.courts.length && (
           <p className="rounded-b-2xl p-6 text-center text-sm text-slate-500">Belum ada court.</p>
         )}

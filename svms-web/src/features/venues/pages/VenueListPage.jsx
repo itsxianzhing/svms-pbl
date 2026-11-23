@@ -24,7 +24,7 @@ export function VenueListPage() {
   return (
     <>
       <PageHeader title="Cari venue" subtitle="Temukan lapangan untuk permainan Anda." />
-      <Card className="mb-6 grid gap-3 p-4 sm:grid-cols-2 sm:p-5 lg:grid-cols-4">
+      <Card className="mb-6 grid grid-cols-1 gap-4 p-4 sm:grid-cols-2 sm:p-5 lg:grid-cols-4">
         <Input
           label="Cari"
           value={params.search || ''}
@@ -50,7 +50,7 @@ export function VenueListPage() {
             <option key={x}>{x}</option>
           ))}
         </Select>
-        <Button variant="secondary" className="self-end" onClick={() => setQ({})}>
+        <Button variant="secondary" className="w-full self-end sm:w-auto" onClick={() => setQ({})}>
           Reset
         </Button>
       </Card>
@@ -66,17 +66,16 @@ export function VenueListPage() {
       ) : (
         <>
            <p className="mb-4 text-sm text-slate-600">Menampilkan <span className="font-semibold text-slate-900">{data.length} venue</span></p>
-           <div className="grid gap-5 sm:grid-cols-2 xl:grid-cols-3">
-             {data.map((v) => (
-               <Link key={v.id} to={`/venues/${v.id}`}>
-                 <Card className="group h-full overflow-hidden p-0 transition duration-200 ease-out hover:-translate-y-0.5 hover:border-indigo-200 hover:shadow-lg motion-reduce:transition-none">
-                   <div className={`relative flex h-24 items-center justify-center overflow-hidden bg-gradient-to-br ${venueTypeStyle(v.type, v.name).gradient}`}><span className="absolute -right-3 -top-8 size-28 rounded-full border border-white/20" /><span className="text-5xl opacity-30">{venueTypeStyle(v.type, v.name).icon}</span></div>
-                   <div className="p-5"><div className="flex min-w-0 items-start justify-between gap-3"><b className="truncate text-base">{v.name}</b><span className="shrink-0 rounded-full bg-indigo-50 px-2.5 py-1 text-xs font-medium text-indigo-700">{v.type}</span></div>
-                   <p className="mt-3 flex items-center gap-1.5 truncate text-sm text-slate-500"><MapPin size={15} />{v.city}</p>
-                   <p className="mt-1 flex items-center gap-1.5 text-sm text-slate-500"><Layers size={15} />{v.courtCount} lapangan</p>
-                   <p className="mt-5 text-sm text-slate-500">Mulai <strong className="text-lg font-semibold tabular-nums text-slate-900">{v.minPricePerHour ? rupiah(v.minPricePerHour) : '—'}</strong> / jam</p>
-                   </div>
-                 </Card>
+            <div className="grid min-w-0 grid-cols-1 gap-4 sm:gap-5 sm:grid-cols-2 xl:grid-cols-3">
+              {data.map((v) => (
+                <Link className="block min-w-0" key={v.id} to={`/venues/${v.id}`}>
+                  <Card className="group h-full min-w-0 overflow-hidden p-0 transition duration-200 ease-out hover:-translate-y-0.5 hover:border-indigo-200 hover:shadow-lg motion-reduce:transition-none">
+                    <div className={`relative flex h-20 items-center justify-center overflow-hidden bg-gradient-to-br sm:h-24 ${venueTypeStyle(v.type, v.name).gradient}`}><span className="absolute -right-3 -top-8 size-28 rounded-full border border-white/20" /><span className="text-4xl opacity-30 sm:text-5xl">{venueTypeStyle(v.type, v.name).icon}</span></div>
+                    <div className="min-w-0 p-4 sm:p-5"><div className="flex min-w-0 items-start gap-2"><b className="min-w-0 flex-1 truncate text-base">{v.name}</b><span className="max-w-[45%] shrink-0 truncate rounded-full bg-indigo-50 px-2.5 py-1 text-xs font-medium text-indigo-700">{v.type}</span></div>
+                    <div className="mt-3 grid grid-cols-2 gap-2 text-sm text-slate-500"><p className="flex min-w-0 items-center gap-1.5"><MapPin className="shrink-0" size={15} /><span className="truncate">{v.city}</span></p><p className="flex min-w-0 items-center justify-end gap-1.5"><Layers className="shrink-0" size={15} /><span className="truncate">{v.courtCount} lapangan</span></p></div>
+                    <p className="mt-4 truncate text-sm text-slate-500">Mulai <strong className="text-lg font-semibold tabular-nums text-slate-900">{v.minPricePerHour ? rupiah(v.minPricePerHour) : '—'}</strong> / jam</p>
+                    </div>
+                  </Card>
               </Link>
             ))}
           </div>

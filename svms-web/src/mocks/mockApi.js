@@ -275,15 +275,15 @@ export async function mockRequest(method, path, { params = {}, body = {}, token 
         courtId: k,
         courtName: x.court.name,
         venueName: x.venue.name,
-        bookingCount: 0,
-        revenue: 0,
+        totalBookings: 0,
+        totalRevenue: 0,
       };
-      a[k].bookingCount++;
-      a[k].revenue += b.totalPrice;
+      a[k].totalBookings++;
+      a[k].totalRevenue += Number(b.totalPrice);
       return a;
     }, {});
     return {
-      totalRevenue: confirmed.reduce((n, b) => n + b.totalPrice, 0),
+      totalRevenue: confirmed.reduce((n, b) => n + Number(b.totalPrice), 0),
       totalBookings: bs.length,
       todayBookings: bs.filter(
         (b) => new Date(b.startTime).toDateString() === new Date().toDateString()
@@ -292,7 +292,7 @@ export async function mockRequest(method, path, { params = {}, body = {}, token 
       confirmedBookings: confirmed.length,
       cancelledBookings: bs.filter((b) => b.status === 'CANCELLED').length,
       topCourts: Object.values(rows)
-        .sort((a, b) => b.bookingCount - a.bookingCount)
+        .sort((a, b) => b.totalBookings - a.totalBookings)
         .slice(0, 5),
     };
   }
