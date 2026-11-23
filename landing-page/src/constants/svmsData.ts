@@ -1,4 +1,4 @@
-export const PROTOTYPE_URL = 'https://svms-pbl-web.itsxianzhing.tech';
+export const PROTOTYPE_URL = 'https://dashboard-svms.itsxianzhing.tech';
 
 export interface NavItem {
   id: string;
