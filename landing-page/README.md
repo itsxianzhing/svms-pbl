@@ -5,7 +5,7 @@ SVMS is a sports venue management platform designed to help venue owners and adm
 This repository contains the **SVMS marketing landing page**, built to introduce the platform, explain its value, showcase its capabilities, and encourage venue owners to request a product demo.
 
 **Live Website:** https://svms.itsxianzhing.tech  
-**Interactive Prototype:** https://svms-pbl-web.itsxianzhing.tech/  
+**Interactive Prototype:** https://dashboard-svms.itsxianzhing.tech/
 **Google AI Studio:** https://ai.studio/apps/e2b779ba-d975-4a64-ad0b-944055e9204d
 
 ---
@@ -211,7 +211,7 @@ Contents:
 
 Prototype URL:
 
-https://svms-pbl-web.itsxianzhing.tech/
+https://dashboard-svms.itsxianzhing.tech/
 
 Technical implementation:
 - Responsive iframe.
@@ -536,7 +536,7 @@ https://svms.itsxianzhing.tech
 
 The interactive SVMS prototype is hosted separately at:
 
-https://svms-pbl-web.itsxianzhing.tech/
+https://dashboard-svms.itsxianzhing.tech/
 
 Deployment considerations:
 
