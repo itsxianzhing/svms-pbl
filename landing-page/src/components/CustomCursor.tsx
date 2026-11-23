@@ -37,14 +37,26 @@ export function CustomCursor() {
   }, []);
 
   useEffect(() => {
+    document.documentElement.classList.toggle('has-custom-cursor', enabled);
+    return () => {
+      document.documentElement.classList.remove('has-custom-cursor');
+    };
+  }, [enabled]);
+
+  useEffect(() => {
     if (!enabled) return;
 
     const handleMove = (e: MouseEvent) => {
+      const target = e.target as HTMLElement | null;
+      if (target?.closest('iframe')) {
+        setVisible(false);
+        return;
+      }
+
       mouseX.set(e.clientX);
       mouseY.set(e.clientY);
-      if (!visible) setVisible(true);
+      setVisible(true);
 
-      const target = e.target as HTMLElement | null;
       if (!target) {
         setVariant('default');
         return;
@@ -65,6 +77,7 @@ export function CustomCursor() {
     const handleUp = () => setPressed(false);
 
     window.addEventListener('mousemove', handleMove, {passive: true});
+    window.addEventListener('blur', handleLeave);
     document.addEventListener('mouseleave', handleLeave);
     document.addEventListener('mouseenter', handleEnter);
     window.addEventListener('mousedown', handleDown, {passive: true});
@@ -72,12 +85,13 @@ export function CustomCursor() {
 
     return () => {
       window.removeEventListener('mousemove', handleMove);
+      window.removeEventListener('blur', handleLeave);
       document.removeEventListener('mouseleave', handleLeave);
       document.removeEventListener('mouseenter', handleEnter);
       window.removeEventListener('mousedown', handleDown);
       window.removeEventListener('mouseup', handleUp);
     };
-  }, [enabled, mouseX, mouseY, visible]);
+  }, [enabled, mouseX, mouseY]);
 
   if (!enabled || !visible) {
     return null;

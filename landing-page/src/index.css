@@ -133,3 +133,10 @@ html[data-theme-settling="true"] [data-theme-stagger="decor"] {
     transition-delay: 0ms !important;
   }
 }
+
+@media (pointer: fine) {
+  html.has-custom-cursor,
+  html.has-custom-cursor * {
+    cursor: none !important;
+  }
+}
