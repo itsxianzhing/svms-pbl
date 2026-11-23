@@ -1,0 +1,135 @@
+@import "tailwindcss";
+@custom-variant dark (&:where(.dark, .dark *));
+
+@theme {
+  --font-display: "Plus Jakarta Sans", ui-sans-serif, system-ui, sans-serif;
+  --font-sans: "DM Sans", ui-sans-serif, system-ui, sans-serif;
+  --font-mono: "JetBrains Mono", ui-monospace, SFMono-Regular, monospace;
+}
+
+:root {
+  --svms-bg: #F6F7FB;
+  --svms-bg-secondary: #FFFFFF;
+  --svms-bg-elevated: #F1F5F9;
+  --svms-card: #FFFFFF;
+  --svms-card-secondary: #F6F7FB;
+  --svms-text: #0F172A;
+  --svms-text-secondary: #475569;
+  --svms-text-muted: #64748B;
+  --svms-accent: #4F46E5;
+  --svms-border: rgba(148, 163, 184, 0.25);
+  --svms-border-accent: rgba(99, 102, 241, 0.35);
+}
+
+.dark {
+  --svms-bg: #0B1020;
+  --svms-bg-secondary: #111827;
+  --svms-bg-elevated: #151D30;
+  --svms-card: #182235;
+  --svms-card-secondary: #1E293B;
+  --svms-card-elevated: #253149;
+  --svms-text: #F8FAFC;
+  --svms-text-secondary: #CBD5E1;
+  --svms-text-muted: #94A3B8;
+  --svms-accent: #6366F1;
+  --svms-border: rgba(148, 163, 184, 0.16);
+  --svms-border-accent: rgba(129, 140, 248, 0.35);
+}
+
+@layer base {
+  html {
+    font-family: var(--font-sans);
+    background-color: var(--svms-bg);
+    color: var(--svms-text);
+    scroll-padding-top: 5rem;
+    overflow-x: clip;
+  }
+
+  body {
+    overflow-x: clip;
+  }
+
+  h1, h2, h3, h4, .font-display {
+    font-family: var(--font-display);
+  }
+}
+
+.tabular-nums {
+  font-variant-numeric: tabular-nums;
+}
+
+.court-grid-bg {
+  background-image:
+    linear-gradient(to right, rgba(79, 70, 229, 0.05) 1px, transparent 1px),
+    linear-gradient(to bottom, rgba(79, 70, 229, 0.05) 1px, transparent 1px);
+  background-size: 40px 40px;
+}
+
+.dark .court-grid-bg {
+  background-image:
+    linear-gradient(to right, rgba(129, 140, 248, 0.08) 1px, transparent 1px),
+    linear-gradient(to bottom, rgba(129, 140, 248, 0.08) 1px, transparent 1px);
+}
+
+/* Cinematic View Transitions API: Circular Theme Reveal */
+::view-transition-old(root),
+::view-transition-new(root) {
+  animation: none;
+  mix-blend-mode: normal;
+}
+
+::view-transition-old(root) {
+  z-index: 1;
+}
+
+::view-transition-new(root) {
+  z-index: 9999;
+  animation: svms-theme-circular-reveal 720ms cubic-bezier(0.22, 1, 0.36, 1) both;
+}
+
+@keyframes svms-theme-circular-reveal {
+  from {
+    clip-path: circle(0px at var(--theme-reveal-x, 50%) var(--theme-reveal-y, 50%));
+  }
+  to {
+    clip-path: circle(var(--theme-reveal-r, 150vmax) at var(--theme-reveal-x, 50%) var(--theme-reveal-y, 50%));
+  }
+}
+
+/* Phase 3 & Phase 4: Choreographed Interface Settling & Subtle Staggers */
+html[data-theme-settling="true"] header,
+html[data-theme-settling="true"] section,
+html[data-theme-settling="true"] footer {
+  transition:
+    background-color 340ms cubic-bezier(0.22, 1, 0.36, 1),
+    border-color 340ms cubic-bezier(0.22, 1, 0.36, 1),
+    color 260ms cubic-bezier(0.22, 1, 0.36, 1);
+}
+
+html[data-theme-settling="true"] header a,
+html[data-theme-settling="true"] header button {
+  transition-delay: 50ms;
+}
+
+html[data-theme-settling="true"] [data-theme-stagger="hero"] {
+  transition-delay: 80ms;
+}
+
+html[data-theme-settling="true"] [data-cursor-card="true"] {
+  transition-delay: 60ms;
+}
+
+html[data-theme-settling="true"] [data-theme-stagger="decor"] {
+  transition-delay: 100ms;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  ::view-transition-new(root) {
+    animation: none !important;
+  }
+
+  html[data-theme-settling="true"] * {
+    transition-duration: 0ms !important;
+    transition-delay: 0ms !important;
+  }
+}

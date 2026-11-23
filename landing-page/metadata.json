@@ -1,0 +1,6 @@
+{
+  "name": "SVMS — Sports Venue Management System",
+  "description": "Platform terintegrasi untuk membantu pemilik venue olahraga mengelola booking, jadwal lapangan, dan operasional bisnis dalam satu sistem.",
+  "requestFramePermissions": [],
+  "majorCapabilities": ["MAJOR_CAPABILITY_SERVER_SIDE_GEMINI_API"]
+}

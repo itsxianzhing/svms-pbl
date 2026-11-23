@@ -60,6 +60,26 @@ services:
       - svms-internal
       - proxy-network
 
+  landing-page:
+    image: ghcr.io/itsxianzhing/svms-landing-page:latest
+    build:
+      context: ./landing-page
+    container_name: svms-landing-page
+    restart: unless-stopped
+    healthcheck:
+      test: ["CMD", "wget", "-q", "--spider", "http://127.0.0.1:80/"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+      start_period: 15s
+    logging:
+      driver: json-file
+      options:
+        max-size: "10m"
+        max-file: "3"
+    networks:
+      - proxy-network
+
 networks:
   svms-internal: # private network between web and API
   proxy-network:
